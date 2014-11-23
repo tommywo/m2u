@@ -2,32 +2,35 @@ package com.tguzik.m2u.conversion;
 
 import static com.tguzik.util.CollectionUtils.safe;
 
-import com.google.common.base.Function;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.ThreadSafe;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.tguzik.m2u.application.ProgramOptions;
 import com.tguzik.m2u.data.jmeter.*;
 import com.tguzik.m2u.data.junit.Failure;
 import com.tguzik.m2u.data.junit.TestCase;
 import com.tguzik.m2u.data.junit.TestSuite;
 import com.tguzik.m2u.data.junit.TestSuites;
 
-public class JmeterToJunitDataStructure implements Function<TestResults, TestSuites> {
+/**
+ * Converts Jmeter data structure to the one reflecting Junit results. This class is thread safe because it has no
+ * state.
+ */
+@ThreadSafe
+@ParametersAreNonnullByDefault
+public class JmeterToJunitDataStructure {
+    /* On JDK8 this class would implement BiFunction interface */
+
     private static final Predicate<AssertionResult> FAILED_ASSERTIONS = new FailedAssertionPredicate();
     private static final Predicate<AssertionResult> ERRORED_ASSERTIONS = new ErroredOutAssertionPredicate();
-    private final ProgramOptions programOptions;
 
-    public JmeterToJunitDataStructure( ProgramOptions programOptions ) {
-        this.programOptions = programOptions;
-    }
-
-    @Override
-    public TestSuites apply( TestResults jmeter ) {
+    public TestSuites apply( String testSuiteName, TestResults jmeter ) {
         TestSuites suites = new TestSuites();
         TestSuite singleSuite = new TestSuite();
 
-        suites.setTestGroupName( programOptions.getTestSuiteName() );
-        singleSuite.setName( programOptions.getTestSuiteName() );
+        suites.setTestGroupName( testSuiteName );
+        singleSuite.setName( testSuiteName );
 
         for ( Sample sample : safe( jmeter.getSamples() ) ) {
             TestCase tc = convertSample( sample );
