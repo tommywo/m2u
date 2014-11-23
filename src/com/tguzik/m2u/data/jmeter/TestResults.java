@@ -1,4 +1,4 @@
-package com.tguzik.m2u.data.jtl;
+package com.tguzik.m2u.data.jmeter;
 
 import java.util.List;
 

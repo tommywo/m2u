@@ -3,7 +3,7 @@ package com.tguzik.m2u.xml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import com.tguzik.m2u.data.jtl.TestResults;
+import com.tguzik.m2u.data.jmeter.TestResults;
 import com.tguzik.objects.BaseObject;
 import com.tguzik.tests.Loader;
 import com.tguzik.tests.Normalize;
@@ -19,8 +19,8 @@ public class JmeterXmlConverterTest {
     public void setUp() throws Exception {
         this.xstream = new JmeterXmlConverter();
 
-        this.input = Loader.loadFile( "test/", JmeterXmlConverterTest.class, "../testdata", "sample-jtl-input.xml" );
-        this.expected = Loader.loadFile( "test/", JmeterXmlConverterTest.class, "../testdata", "parsed-jtl.txt" );
+        this.input = Loader.loadFile( "test/", JmeterXmlConverterTest.class, "../testdata", "sample-jmeter-input.xml" );
+        this.expected = Loader.loadFile( "test/", JmeterXmlConverterTest.class, "../testdata", "parsed-jmeter.txt" );
     }
 
     @Test

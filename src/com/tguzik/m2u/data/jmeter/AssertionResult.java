@@ -1,4 +1,4 @@
-package com.tguzik.m2u.data.jtl;
+package com.tguzik.m2u.data.jmeter;
 
 import com.tguzik.objects.BaseObject;
 import com.thoughtworks.xstream.annotations.XStreamAlias;

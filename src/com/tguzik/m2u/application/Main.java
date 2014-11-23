@@ -2,8 +2,8 @@ package com.tguzik.m2u.application;
 
 import java.io.*;
 
-import com.tguzik.m2u.data.JtlToJunitConverter;
-import com.tguzik.m2u.data.jtl.TestResults;
+import com.tguzik.m2u.conversion.JmeterToJunitDataStructure;
+import com.tguzik.m2u.data.jmeter.TestResults;
 import com.tguzik.m2u.data.junit.TestSuites;
 import com.tguzik.m2u.xml.JmeterXmlConverter;
 import com.tguzik.m2u.xml.JunitXmlConverter;

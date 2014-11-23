@@ -1,4 +1,4 @@
-package com.tguzik.m2u.data;
+package com.tguzik.m2u.conversion;
 
 import static com.tguzik.util.CollectionUtils.safe;
 
@@ -6,18 +6,18 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.tguzik.m2u.application.ProgramOptions;
-import com.tguzik.m2u.data.jtl.*;
+import com.tguzik.m2u.data.jmeter.*;
 import com.tguzik.m2u.data.junit.Failure;
 import com.tguzik.m2u.data.junit.TestCase;
 import com.tguzik.m2u.data.junit.TestSuite;
 import com.tguzik.m2u.data.junit.TestSuites;
 
-public class JtlToJunitConverter implements Function<TestResults, TestSuites> {
+public class JmeterToJunitDataStructure implements Function<TestResults, TestSuites> {
     private static final Predicate<AssertionResult> FAILED_ASSERTIONS = new FailedAssertionPredicate();
     private static final Predicate<AssertionResult> ERRORED_ASSERTIONS = new ErroredOutAssertionPredicate();
     private final ProgramOptions programOptions;
 
-    public JtlToJunitConverter( ProgramOptions programOptions ) {
+    public JmeterToJunitDataStructure( ProgramOptions programOptions ) {
         this.programOptions = programOptions;
     }
 
