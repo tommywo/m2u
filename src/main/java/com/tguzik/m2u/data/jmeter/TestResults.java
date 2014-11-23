@@ -1,11 +1,14 @@
 package com.tguzik.m2u.data.jmeter;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.tguzik.objects.BaseObject;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -53,6 +56,8 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
  * @see http://jmeter.apache.org/usermanual/listeners.html#attributes
  */
 @XStreamAlias( "testResults" )
+@NotThreadSafe
+@ParametersAreNonnullByDefault
 @XmlRootElement( name = "testResults" )
 public class TestResults extends BaseObject {
     @XStreamAsAttribute
@@ -66,14 +71,20 @@ public class TestResults extends BaseObject {
     private final List<Sample> samples;
 
     @XStreamImplicit
-    @XStreamAlias( impl = HttpSample.class, value = "httpSample" )
+    @XStreamAlias( impl = Sample.class, value = "httpSample" )
     @XmlList
-    @XmlElement( name = "httpSample", type = HttpSample.class )
-    private List<HttpSample> httpSamples;
+    @XmlElement( name = "httpSample", type = Sample.class )
+    private List<Sample> httpSamples;
 
     public TestResults() {
         this.samples = Lists.newArrayList();
         this.httpSamples = Lists.newArrayList();
+    }
+
+    public TestResults( String version, List<Sample> samples, List<Sample> httpSamples ) {
+        this.version = Preconditions.checkNotNull( version );
+        this.samples = Preconditions.checkNotNull( samples );
+        this.httpSamples = Preconditions.checkNotNull( httpSamples );
     }
 
     public String getVersion() {
@@ -92,15 +103,15 @@ public class TestResults extends BaseObject {
         this.samples.add( sample );
     }
 
-    public List<HttpSample> getHttpSamples() {
+    public List<Sample> getHttpSamples() {
         return httpSamples;
     }
 
-    public void addHttpSample( HttpSample sample ) {
+    public void addHttpSample( Sample sample ) {
         this.httpSamples.add( sample );
     }
 
-    public void setHttpSamples( List<HttpSample> httpSamples ) {
+    public void setHttpSamples( List<Sample> httpSamples ) {
         this.httpSamples = httpSamples;
     }
 

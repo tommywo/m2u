@@ -13,13 +13,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class JtlToJunitConverterTest {
+public class JmeterToJunitDataStructureTest {
     private String input;
     private String expected;
     private JunitXmlConverter junit;
     private JmeterXmlConverter jmeter;
     private JmeterToJunitDataStructure converter;
-    private String originalSeparator;
 
     @Before
     public void setUp() throws Exception {
@@ -27,8 +26,10 @@ public class JtlToJunitConverterTest {
         this.jmeter = new JmeterXmlConverter();
         this.converter = new JmeterToJunitDataStructure();
 
-        this.input = Loader.loadFile( JtlToJunitConverterTest.class, "../testdata", "sample-jmeter-input.xml" ).trim();
-        this.expected = Loader.loadFile( JtlToJunitConverterTest.class, "../testdata", "converted-result.txt" ).trim();
+        this.input = Loader.loadFile( JmeterToJunitDataStructureTest.class, "../testdata", "sample-jmeter-input.xml" )
+                           .trim();
+        this.expected = Loader.loadFile( JmeterToJunitDataStructureTest.class, "../testdata", "converted-result.txt" )
+                              .trim();
     }
 
     @Test

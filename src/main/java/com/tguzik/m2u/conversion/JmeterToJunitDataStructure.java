@@ -7,7 +7,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.tguzik.m2u.data.jmeter.*;
+import com.tguzik.m2u.data.jmeter.AssertionResult;
+import com.tguzik.m2u.data.jmeter.Sample;
+import com.tguzik.m2u.data.jmeter.TestResults;
 import com.tguzik.m2u.data.junit.Failure;
 import com.tguzik.m2u.data.junit.TestCase;
 import com.tguzik.m2u.data.junit.TestSuite;
@@ -37,7 +39,7 @@ public class JmeterToJunitDataStructure {
             singleSuite.addTestCase( tc );
         }
 
-        for ( HttpSample sample : safe( jmeter.getHttpSamples() ) ) {
+        for ( Sample sample : safe( jmeter.getHttpSamples() ) ) {
             TestCase tc = convertHttpSample( sample );
             singleSuite.addTestCase( tc );
         }
@@ -47,7 +49,7 @@ public class JmeterToJunitDataStructure {
         return suites;
     }
 
-    private TestCase convertSample( AbstractSample sample ) {
+    private TestCase convertSample( Sample sample ) {
         TestCase tc = new TestCase();
 
         tc.setAssertions( safe( sample.getAssertionResults() ).size() );
@@ -85,7 +87,7 @@ public class JmeterToJunitDataStructure {
         return error;
     }
 
-    private TestCase convertHttpSample( HttpSample sample ) {
+    private TestCase convertHttpSample( Sample sample ) {
         return convertSample( sample );
     }
 
