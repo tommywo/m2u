@@ -1,20 +1,26 @@
 package com.tguzik.m2u.data.jmeter;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.tguzik.objects.BaseObject;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("assertionResult")
+@XStreamAlias( "assertionResult" )
 public class AssertionResult extends BaseObject {
-    @XStreamAlias("name")
+    @XStreamAlias( "name" )
+    @XmlElement( name = "name" )
     private String name;
 
-    @XStreamAlias("failure")
+    @XStreamAlias( "failure" )
+    @XmlElement( name = "failure" )
     private boolean failure;
 
-    @XStreamAlias("error")
+    @XStreamAlias( "error" )
+    @XmlElement( name = "error" )
     private boolean error;
 
-    @XStreamAlias("failureMessage")
+    @XStreamAlias( "failureMessage" )
+    @XmlElement( name = "failureMessage" )
     private String failureMessage;
 
     public String getName() {

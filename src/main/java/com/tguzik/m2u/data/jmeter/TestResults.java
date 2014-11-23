@@ -1,5 +1,9 @@
 package com.tguzik.m2u.data.jmeter;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlList;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -49,16 +53,22 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
  * @see http://jmeter.apache.org/usermanual/listeners.html#attributes
  */
 @XStreamAlias( "testResults" )
+@XmlRootElement( name = "testResults" )
 public class TestResults extends BaseObject {
     @XStreamAsAttribute
+    @XmlAttribute( name = "version" )
     private String version;
 
     @XStreamImplicit
     @XStreamAlias( impl = Sample.class, value = "sample" )
+    @XmlList
+    @XmlElement( name = "sample", type = Sample.class )
     private final List<Sample> samples;
 
     @XStreamImplicit
     @XStreamAlias( impl = HttpSample.class, value = "httpSample" )
+    @XmlList
+    @XmlElement( name = "httpSample", type = HttpSample.class )
     private List<HttpSample> httpSamples;
 
     public TestResults() {

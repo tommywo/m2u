@@ -1,5 +1,8 @@
 package com.tguzik.m2u.data.junit;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,53 +23,67 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 public class TestSuite extends BaseObject {
     @XStreamAsAttribute
     @XStreamAlias("disabled")
+    @XmlAttribute(name="disabled")
     private int disabledTests;
 
     @XStreamAsAttribute
     @XStreamAlias("errors")
+    @XmlAttribute(name="errors")
     private int errorsInTests;
 
     @XStreamAsAttribute
     @XStreamAlias("failures")
+    @XmlAttribute(name="failures")
     private int failuresInTests;
 
     @XStreamAsAttribute
     @XStreamAlias("tests")
+    @XmlAttribute(name="tests")
     private int totalTests;
 
     @XStreamAsAttribute
     @XStreamAlias("hostname")
+    @XmlAttribute(name="hostname")
     private String hostname;
 
     @XStreamAsAttribute
     @XStreamAlias("id")
+    @XmlAttribute(name="id")
     private String id;
 
     @XStreamAsAttribute
     @XStreamAlias("name")
+    @XmlAttribute(name="name")
     private String name;
 
     @XStreamAsAttribute
     @XStreamAlias("package")
+    @XmlAttribute(name="package")
     private String packageName;
 
     @XStreamAsAttribute
     @XStreamAlias("skipped")
+    @XmlAttribute(name="skipped")
     private int skippedTests;
 
     @XStreamAsAttribute
     @XStreamAlias("tests")
+    @XmlAttribute(name="tests")
     private long timeSpentInMillis;
 
     @XStreamAsAttribute
     @XStreamAlias("timestamp")
+    @XmlAttribute(name="timestamp")
     private long timestamp;
 
     @XStreamAlias("properties")
+    @XmlElement(name="properties")
     private final Map<String, String> properties;
 
     @XStreamImplicit
     @XStreamAlias("testcase")
+    @XmlList
+    @XmlElement(name="testcase")
     private final List<TestCase> testCases;
 
     public TestSuite() {

@@ -47,7 +47,7 @@ public class JmeterToJunitDataStructure {
         return suites;
     }
 
-    private TestCase convertSample( BaseSample sample ) {
+    private TestCase convertSample( AbstractSample sample ) {
         TestCase tc = new TestCase();
 
         tc.setAssertions( safe( sample.getAssertionResults() ).size() );

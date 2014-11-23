@@ -1,5 +1,9 @@
 package com.tguzik.m2u.data.junit;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlList;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -14,33 +18,43 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
  * @author Tomek
  */
 @XStreamAlias("testsuites")
+@XmlRootElement(name="testsuites")
 public class TestSuites extends BaseObject {
     @XStreamAsAttribute
     @XStreamAlias("disabled")
+    @XmlAttribute(name="disabled")
     private int disabledTests;
 
     @XStreamAsAttribute
     @XStreamAlias("errors")
+    @XmlAttribute(name="errors")
     private int errorsInTests;
 
     @XStreamAsAttribute
     @XStreamAlias("failures")
+    @XmlAttribute(name="failures")
     private int failuresInTests;
 
     @XStreamAsAttribute
     @XStreamAlias("name")
+    @XmlAttribute(name="name")
     private String testGroupName;
 
     @XStreamAsAttribute
     @XStreamAlias("tests")
+    @XmlAttribute(name="tests")
     private int totalTests;
 
+    /** in milliseconds */
     @XStreamAsAttribute
     @XStreamAlias("time")
-    private long totalTimeSpent; // miliseconds
+    @XmlAttribute(name="time")
+    private long totalTimeSpent;
 
     @XStreamImplicit
     @XStreamAlias("testsuite")
+    @XmlList
+    @XmlElement(name="testsuite", type = TestSuite.class)
     private final List<TestSuite> testSuites;
 
     public TestSuites() {

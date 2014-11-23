@@ -1,5 +1,8 @@
 package com.tguzik.m2u.data.jmeter;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -14,92 +17,118 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
  *
  * @author Tomek
  */
-public class BaseSample extends BaseObject {
+public class AbstractSample extends BaseObject {
     @XStreamImplicit
     @XStreamAlias( "assertionResult" )
+    @XmlList
+    @XmlElement( name = "assertionResult", type = AssertionResult.class )
     private List<AssertionResult> assertionResults;
 
+    /** in milliseconds */
     @XStreamAsAttribute
     @XStreamAlias( "t" )
-    private Integer elapsedTime; // miliseconds
+    @XmlAttribute( name = "t" )
+    private Integer elapsedTime;
 
+    /** in milliseconds */
     @XStreamAsAttribute
     @XStreamAlias( "lt" )
-    private Integer latency; // miliseconds
+    @XmlAttribute( name = "lt" )
+    private Integer latency;
 
     @XStreamAsAttribute
     @XStreamAlias( "ts" )
+    @XmlAttribute( name = "ts" )
     private Long timestamp;
 
     @XStreamAsAttribute
     @XStreamAlias( "s" )
+    @XmlAttribute( name = "s" )
     private boolean success;
 
     @XStreamAsAttribute
     @XStreamAlias( "lb" )
+    @XmlAttribute( name = "lb" )
     private String label;
 
     @XStreamAsAttribute
     @XStreamAlias( "rc" )
+    @XmlAttribute( name = "rc" )
     private Integer httpResponseCode;
 
     @XStreamAsAttribute
     @XStreamAlias( "rm" )
+    @XmlAttribute( name = "rm" )
     private String httpResponseMessage;
 
     @XStreamAsAttribute
     @XStreamAlias( "tn" )
+    @XmlAttribute( name = "tn" )
     private String threadName;
 
     @XStreamAsAttribute
     @XStreamAlias( "dt" )
+    @XmlAttribute( name = "dt" )
     private String dataType;
 
     @XStreamAsAttribute
     @XStreamAlias( "de" )
+    @XmlAttribute( name = "de" )
     private String dataEncoding;
 
     @XStreamAsAttribute
     @XStreamAlias( "by" )
+    @XmlAttribute( name = "by" )
     private Integer bytes;
 
     @XStreamAsAttribute
     @XStreamAlias( "ng" )
+    @XmlAttribute( name = "ng" )
     private Integer numberOfActiveThreadsInGroup;
 
     @XStreamAsAttribute
     @XStreamAlias( "na" )
+    @XmlAttribute( name = "na" )
     private Integer numberOfAllActiveThreads;
 
     @XStreamAsAttribute
     @XStreamAlias( "hn" )
+    @XmlAttribute( name = "hn" )
     private String hostname;
 
     @XStreamAlias( "responseHeader" )
+    @XmlElement( name = "responseHeader" )
     private String responseHeader;
 
     @XStreamAlias( "requestHeader" )
+    @XmlElement( name = "requestHeader" )
     private String requestHeader;
 
     @XStreamAlias( "responseData" )
+    @XmlElement( name = "responseData" )
     private String responseData;
 
     @XStreamAlias( "samplerData" )
+    @XmlElement( name = "samplerData" )
     private String samplerData;
 
     @XStreamAlias( "cookies" )
+    @XmlElement( name = "cookies" )
     private String cookies;
 
     @XStreamAlias( "method" )
+    @XmlElement( name = "method" )
     private String method;
 
     @XStreamAlias( "queryString" )
+    @XmlElement( name = "queryString" )
     private String queryString;
 
     @XStreamAlias( "java.net.URL" )
+    @XmlElement( name = "java.net.URL" )
     private String url;
 
-    public BaseSample() {
+    public AbstractSample() {
         this.assertionResults = Lists.newArrayList();
     }
 

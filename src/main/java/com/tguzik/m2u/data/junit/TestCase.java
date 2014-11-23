@@ -1,5 +1,8 @@
 package com.tguzik.m2u.data.junit;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -8,42 +11,55 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-@XStreamAlias("testcase")
+@XStreamAlias( "testcase" )
 public class TestCase extends BaseObject {
     @XStreamAsAttribute
-    @XStreamAlias("assertions")
+    @XStreamAlias( "assertions" )
+    @XmlAttribute( name = "assertions" )
     private int assertions;
 
     @XStreamAsAttribute
-    @XStreamAlias("classname")
+    @XStreamAlias( "classname" )
+    @XmlAttribute( name = "classname" )
     private String classname;
 
     @XStreamAsAttribute
-    @XStreamAlias("name")
+    @XStreamAlias( "name" )
+    @XmlAttribute( name = "name" )
     private String testName;
 
     @XStreamAsAttribute
-    @XStreamAlias("status")
+    @XStreamAlias( "status" )
+    @XmlAttribute( name = "status" )
     private String status;
 
     @XStreamAsAttribute
-    @XStreamAlias("time")
+    @XStreamAlias( "time" )
+    @XmlAttribute( name = "time" )
     private double totalTimeSpentInSeconds;
 
     @XStreamImplicit
-    @XStreamAlias("error")
+    @XStreamAlias( "error" )
+    @XmlList
+    @XmlElement( name = "error", type = Error.class )
     private final List<Error> errors;
 
     @XStreamImplicit
-    @XStreamAlias("failure")
+    @XStreamAlias( "failure" )
+    @XmlList
+    @XmlElement( name = "failure" )
     private final List<Failure> failures;
 
-    @XStreamImplicit(itemFieldName = "system-out")
-    @XStreamAlias("system-out")
+    @XStreamImplicit( itemFieldName = "system-out" )
+    @XStreamAlias( "system-out" )
+    @XmlList
+    @XmlElement( name = "system-out" )
     private final List<String> systemOut;
 
     @XStreamImplicit
-    @XStreamAlias("system-err")
+    @XStreamAlias( "system-err" )
+    @XmlList
+    @XmlElement( name = "system-err" )
     private final List<String> systemErr;
 
     public TestCase() {
