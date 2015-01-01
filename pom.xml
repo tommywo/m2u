@@ -1,23 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.tguzik</groupId>
     <artifactId>m2u</artifactId>
-    <version>2014.xx-SNAPSHOT</version>
-    <name>m2u</name>
+    <version>2015.xx-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <url>>http://github.com/tguzik/m2u</url>
-    <description>JMeter JTL to JUnit reports translator</description>
+    <name>m2u</name>
+    <url>http://github.com/tguzik/m2u</url>
+    <description>
+        JMeter JTL to JUnit reports translator.
+    </description>
+
     <scm>
-        <url>https://github.com/tguzik/m2u.git</url>
-        <connection>https://github.com/tguzik/m2u.git</connection>
+        <connection>scm:git:git@github.com:tguzik/m2u.git</connection>
+        <developerConnection>scm:git:git@github.com:tguzik/m2u.git</developerConnection>
+        <url>git@github.com:tguzik/m2u.git</url>
     </scm>
+
     <issueManagement>
         <system>GitHub Issues</system>
         <url>https://github.com/tguzik/m2u/issues</url>
     </issueManagement>
+
     <inceptionYear>2012</inceptionYear>
+
     <licenses>
         <license>
             <name>GNU GENERAL PUBLIC LICENSE Version 2</name>
@@ -26,23 +34,53 @@
     </licenses>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.7</jdk.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <reporting>
-        <outputDirectory>${project.build.directory}/reports</outputDirectory>
-    </reporting>
+
+    <profiles>
+        <profile>
+            <id>javadoc</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <defaultGoal>javadoc:javadoc</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <configuration>
+                            <fixTags>true</fixTags>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>upgrades</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <defaultGoal>versions:display-dependency-updates</defaultGoal>
+            </build>
+        </profile>
+    </profiles>
+
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>14.0.1</version>
+            <version>18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -68,13 +106,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>1.10.8</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -105,19 +137,103 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
+
+            <!-- Basic plugins: -->
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.7.1</version>
-                <configuration>
-                    <parallel>classes</parallel>
-                </configuration>
-            </plugin>
-            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.7.1</version>
+                <configuration>
+                    <forkedProcessTimeoutInSeconds>60</forkedProcessTimeoutInSeconds>
+                    <useUnlimitedThreads>true</useUnlimitedThreads>
+                    <failIfNoTests>true</failIfNoTests>
+                    <parallel>classes</parallel>
+                    <runOrder>random</runOrder>
+                    <useFile>false</useFile>
+                </configuration>
+            </plugin>
+
+            <!-- Static code analysis and mutation testing plugins: -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Default</threshold>
+                    <xmlOutput>true</xmlOutput>
+                    <detail>true</detail>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.2</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>cpd-check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <verbose>true</verbose>
+                    <targetJdk>${jdk.version}</targetJdk>
+                    <rulesets>
+                        <ruleset>${project.basedir}/src/ci/resources/pmd.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>mutationCoverage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <timestampedReports>false</timestampedReports>
+                    <exportLineCoverage>true</exportLineCoverage>
+                    <targetClasses>
+                        <param>com.tguzik*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>com.tguzik*</param>
+                    </targetTests>
+                    <mutators>
+                        <mutator>DEFAULTS</mutator>
+                        <mutator>REMOVE_CONDITIONALS</mutator>
+                        <mutator>INLINE_CONSTS</mutator>
+                        <mutator>NON_VOID_METHOD_CALLS</mutator>
+                        <mutator>EXPERIMENTAL_SWITCH</mutator>
+                    </mutators>
                 </configuration>
             </plugin>
         </plugins>
