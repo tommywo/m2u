@@ -1,17 +1,13 @@
 package com.tguzik.m2u.conversion;
 
-import static com.tguzik.util.CollectionUtils.safe;
-
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.List;
+import java.util.Objects;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.tguzik.m2u.data.jmeter.AssertionResult;
-import com.tguzik.m2u.data.jmeter.Sample;
+import com.tguzik.m2u.conversion.readability.JMeter;
+import com.tguzik.m2u.conversion.readability.JUnit;
 import com.tguzik.m2u.data.jmeter.TestResults;
-import com.tguzik.m2u.data.junit.Failure;
-import com.tguzik.m2u.data.junit.TestCase;
 import com.tguzik.m2u.data.junit.TestSuite;
 import com.tguzik.m2u.data.junit.TestSuites;
 
@@ -22,87 +18,78 @@ import com.tguzik.m2u.data.junit.TestSuites;
 @ThreadSafe
 @ParametersAreNonnullByDefault
 public class JmeterToJunitDataStructure {
-    /* On JDK8 this class would implement BiFunction interface */
+    /* On JDK8 this class would implement BiFunction interface... */
+    private final ResultsToTestSuites resultsToTestSuites;
 
-    private static final Predicate<AssertionResult> FAILED_ASSERTIONS = new FailedAssertionPredicate();
-    private static final Predicate<AssertionResult> ERRORED_ASSERTIONS = new ErroredOutAssertionPredicate();
-
-    public TestSuites apply( String testSuiteName, TestResults jmeter ) {
-        TestSuites suites = new TestSuites();
-        TestSuite singleSuite = new TestSuite();
-
-        suites.setTestGroupName( testSuiteName );
-        singleSuite.setName( testSuiteName );
-
-        for ( Sample sample : safe( jmeter.getSamples() ) ) {
-            TestCase tc = convertSample( sample );
-            singleSuite.addTestCase( tc );
-        }
-
-        for ( Sample sample : safe( jmeter.getHttpSamples() ) ) {
-            TestCase tc = convertHttpSample( sample );
-            singleSuite.addTestCase( tc );
-        }
-
-        suites.addTestSuite( singleSuite );
-
-        return suites;
+    public JmeterToJunitDataStructure() {
+        this( new ResultsToTestSuites() );
     }
 
-    private TestCase convertSample( Sample sample ) {
-        TestCase tc = new TestCase();
+    public JmeterToJunitDataStructure( ResultsToTestSuites resultsToTestSuites ) {
+        this.resultsToTestSuites = Objects.requireNonNull( resultsToTestSuites );
+    }
 
-        tc.setAssertions( safe( sample.getAssertionResults() ).size() );
-        tc.setClassname( sample.getThreadName() );
-        tc.setTestName( sample.getThreadName() );
-        tc.setTotalTimeSpent( sample.getElapsedTime() );
-        tc.addSystemOut( sample.toString() );
+    @JUnit
+    public TestSuites apply( String testSuiteName, @JMeter TestResults jmeter ) {
+        final List<TestSuite> testSuites = resultsToTestSuites.apply( testSuiteName, jmeter );
 
-        for ( AssertionResult ar : Iterables.filter( safe( sample.getAssertionResults() ), ERRORED_ASSERTIONS ) ) {
-            tc.addError( convertErroredOutAssertion( ar ) );
+        return new TestSuites( testSuites,
+                               testSuiteName,
+                               disabledTests( testSuites ),
+                               errorsInTests( testSuites ),
+                               failuresInTests( testSuites ),
+                               totalTests( testSuites ),
+                               totalTimeSpent( testSuites ) );
+    }
+
+    private int disabledTests( List<TestSuite> input ) {
+        int accumulator = 0;
+
+        for ( TestSuite suite : input ) {
+            accumulator += suite.getDisabledTests();
         }
 
-        for ( AssertionResult ar : Iterables.filter( safe( sample.getAssertionResults() ), FAILED_ASSERTIONS ) ) {
-            tc.addFailure( convertFailedAssertion( ar ) );
+        return accumulator;
+    }
+
+    private int errorsInTests( List<TestSuite> input ) {
+        int accumulator = 0;
+
+        for ( TestSuite suite : input ) {
+            accumulator += suite.getErrorsInTests();
         }
 
-        return tc;
+        return accumulator;
     }
 
-    private Failure convertFailedAssertion( AssertionResult ar ) {
-        Failure failure = new Failure();
+    private int failuresInTests( List<TestSuite> input ) {
+        int accumulator = 0;
 
-        failure.setMessage( ar.getFailureMessage() );
-        failure.setType( ar.getName() );
-
-        return failure;
-    }
-
-    private com.tguzik.m2u.data.junit.Error convertErroredOutAssertion( AssertionResult ar ) {
-        com.tguzik.m2u.data.junit.Error error = new com.tguzik.m2u.data.junit.Error();
-
-        error.setMessage( ar.getFailureMessage() );
-        error.setType( ar.getName() );
-
-        return error;
-    }
-
-    private TestCase convertHttpSample( Sample sample ) {
-        return convertSample( sample );
-    }
-
-    private static class ErroredOutAssertionPredicate implements Predicate<AssertionResult> {
-        @Override
-        public boolean apply( AssertionResult ar ) {
-            return ar.isError();
+        for ( TestSuite suite : input ) {
+            accumulator += suite.getFailuresInTests();
         }
+
+        return accumulator;
     }
 
-    private static class FailedAssertionPredicate implements Predicate<AssertionResult> {
-        @Override
-        public boolean apply( AssertionResult ar ) {
-            return ar.isFailure();
+    private int totalTests( List<TestSuite> input ) {
+        int accumulator = 0;
+
+        for ( TestSuite suite : input ) {
+            accumulator += suite.getTotalTests();
         }
+
+        return accumulator;
+    }
+
+    private long totalTimeSpent( List<TestSuite> input ) {
+        long accumulator = 0;
+
+        for ( TestSuite suite : input ) {
+            accumulator += suite.getTimeSpentInMillis();
+        }
+
+        return accumulator;
     }
 }
 

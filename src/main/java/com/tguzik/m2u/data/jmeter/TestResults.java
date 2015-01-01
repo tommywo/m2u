@@ -9,11 +9,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.tguzik.objects.BaseObject;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * View of the data parsed:
@@ -59,10 +61,10 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 @NotThreadSafe
 @ParametersAreNonnullByDefault
 @XmlRootElement( name = "testResults" )
-public class TestResults extends BaseObject {
+public final class TestResults extends BaseObject {
     @XStreamAsAttribute
     @XmlAttribute( name = "version" )
-    private String version;
+    private final String version;
 
     @XStreamImplicit
     @XStreamAlias( impl = Sample.class, value = "sample" )
@@ -74,45 +76,29 @@ public class TestResults extends BaseObject {
     @XStreamAlias( impl = Sample.class, value = "httpSample" )
     @XmlList
     @XmlElement( name = "httpSample", type = Sample.class )
-    private List<Sample> httpSamples;
+    private final List<Sample> httpSamples;
 
-    public TestResults() {
-        this.samples = Lists.newArrayList();
-        this.httpSamples = Lists.newArrayList();
+    /** Needed by jaxb */
+    private TestResults() {
+        this( StringUtils.EMPTY, Lists.<Sample>newArrayList(), Lists.<Sample>newArrayList() );
     }
 
     public TestResults( String version, List<Sample> samples, List<Sample> httpSamples ) {
         this.version = Preconditions.checkNotNull( version );
-        this.samples = Preconditions.checkNotNull( samples );
-        this.httpSamples = Preconditions.checkNotNull( httpSamples );
+        this.samples = ImmutableList.copyOf( samples );
+        this.httpSamples = ImmutableList.copyOf( httpSamples );
     }
 
     public String getVersion() {
         return version;
     }
 
-    public void setVersion( String version ) {
-        this.version = version;
-    }
-
     public List<Sample> getSamples() {
         return samples;
     }
 
-    public void addSample( Sample sample ) {
-        this.samples.add( sample );
-    }
-
     public List<Sample> getHttpSamples() {
         return httpSamples;
-    }
-
-    public void addHttpSample( Sample sample ) {
-        this.httpSamples.add( sample );
-    }
-
-    public void setHttpSamples( List<Sample> httpSamples ) {
-        this.httpSamples = httpSamples;
     }
 
     @Override

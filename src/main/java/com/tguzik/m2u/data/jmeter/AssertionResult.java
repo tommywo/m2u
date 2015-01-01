@@ -1,36 +1,38 @@
 package com.tguzik.m2u.data.jmeter;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.ParametersAreNullableByDefault;
+import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlElement;
 
 import com.google.common.base.Preconditions;
 import com.tguzik.objects.BaseObject;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import org.apache.commons.lang3.StringUtils;
 
-@XStreamAlias( "assertionResult" )
-@ParametersAreNullableByDefault
-public class AssertionResult extends BaseObject {
+@Immutable
+@ParametersAreNonnullByDefault
+public final class AssertionResult extends BaseObject {
     @XStreamAlias( "name" )
     @XmlElement( name = "name" )
-    private String name;
+    private final String name;
 
     @XStreamAlias( "failure" )
     @XmlElement( name = "failure" )
-    private boolean failure;
+    private final boolean failure;
 
     @XStreamAlias( "error" )
     @XmlElement( name = "error" )
-    private boolean error;
+    private final boolean error;
 
     @XStreamAlias( "failureMessage" )
     @XmlElement( name = "failureMessage" )
-    private String failureMessage;
+    private final String failureMessage;
 
-    public AssertionResult() {
+    /** Needed by jaxb */
+    private AssertionResult() {
+        this( StringUtils.EMPTY, false, false, StringUtils.EMPTY );
     }
 
-    @ParametersAreNonnullByDefault
     public AssertionResult( String name, boolean failure, boolean error, String failureMessage ) {
         this.name = Preconditions.checkNotNull( name );
         this.failure = Preconditions.checkNotNull( failure );
@@ -42,32 +44,16 @@ public class AssertionResult extends BaseObject {
         return name;
     }
 
-    public void setName( String name ) {
-        this.name = name;
-    }
-
     public boolean isFailure() {
         return failure;
-    }
-
-    public void setFailure( boolean failure ) {
-        this.failure = failure;
     }
 
     public boolean isError() {
         return error;
     }
 
-    public void setError( boolean error ) {
-        this.error = error;
-    }
-
     public String getFailureMessage() {
         return failureMessage;
-    }
-
-    public void setFailureMessage( String failureMessage ) {
-        this.failureMessage = failureMessage;
     }
 
     @Override

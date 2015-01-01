@@ -21,6 +21,11 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 @XmlRootElement(name="testsuites")
 public class TestSuites extends BaseObject {
     @XStreamAsAttribute
+    @XStreamAlias("name")
+    @XmlAttribute(name="name")
+    private String testGroupName;
+
+    @XStreamAsAttribute
     @XStreamAlias("disabled")
     @XmlAttribute(name="disabled")
     private int disabledTests;
@@ -34,11 +39,6 @@ public class TestSuites extends BaseObject {
     @XStreamAlias("failures")
     @XmlAttribute(name="failures")
     private int failuresInTests;
-
-    @XStreamAsAttribute
-    @XStreamAlias("name")
-    @XmlAttribute(name="name")
-    private String testGroupName;
 
     @XStreamAsAttribute
     @XStreamAlias("tests")
@@ -59,6 +59,22 @@ public class TestSuites extends BaseObject {
 
     public TestSuites() {
         this.testSuites = Lists.newArrayList();
+    }
+
+    public TestSuites( List<TestSuite> testSuites,
+                       String testGroupName,
+                       int disabledTests,
+                       int errorsInTests,
+                       int failuresInTests,
+                       int totalTests,
+                       long totalTimeSpent ) {
+        this.testSuites = testSuites;
+        this.testGroupName = testGroupName;
+        this.disabledTests = disabledTests;
+        this.errorsInTests = errorsInTests;
+        this.failuresInTests = failuresInTests;
+        this.totalTests = totalTests;
+        this.totalTimeSpent = totalTimeSpent;
     }
 
     public List<TestSuite> getTestSuites() {

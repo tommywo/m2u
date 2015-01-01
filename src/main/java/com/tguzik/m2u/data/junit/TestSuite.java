@@ -1,17 +1,23 @@
 package com.tguzik.m2u.data.junit;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tguzik.objects.BaseObject;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Tomek
@@ -19,183 +25,176 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
  * http://stackoverflow.com/questions/4922867/junit-xml-format-specification-that-hudson-supports
  * </pre>
  */
-@XStreamAlias("testsuite")
-public class TestSuite extends BaseObject {
+@XStreamAlias( "testsuite" )
+@Immutable
+@ParametersAreNonnullByDefault
+public final class TestSuite extends BaseObject {
     @XStreamAsAttribute
-    @XStreamAlias("disabled")
-    @XmlAttribute(name="disabled")
-    private int disabledTests;
+    @XStreamAlias( "id" )
+    @XmlAttribute( name = "id" )
+    private final String id;
 
     @XStreamAsAttribute
-    @XStreamAlias("errors")
-    @XmlAttribute(name="errors")
-    private int errorsInTests;
+    @XStreamAlias( "name" )
+    @XmlAttribute( name = "name" )
+    private final String name;
 
     @XStreamAsAttribute
-    @XStreamAlias("failures")
-    @XmlAttribute(name="failures")
-    private int failuresInTests;
+    @XStreamAlias( "package" )
+    @XmlAttribute( name = "package" )
+    private final String packageName;
 
     @XStreamAsAttribute
-    @XStreamAlias("tests")
-    @XmlAttribute(name="tests")
-    private int totalTests;
+    @XStreamAlias( "hostname" )
+    @XmlAttribute( name = "hostname" )
+    private final String hostname;
 
     @XStreamAsAttribute
-    @XStreamAlias("hostname")
-    @XmlAttribute(name="hostname")
-    private String hostname;
+    @XStreamAlias( "tests" )
+    @XmlAttribute( name = "tests" )
+    private final int totalTests;
 
     @XStreamAsAttribute
-    @XStreamAlias("id")
-    @XmlAttribute(name="id")
-    private String id;
+    @XStreamAlias( "disabled" )
+    @XmlAttribute( name = "disabled" )
+    private final int disabledTests;
 
     @XStreamAsAttribute
-    @XStreamAlias("name")
-    @XmlAttribute(name="name")
-    private String name;
+    @XStreamAlias( "errors" )
+    @XmlAttribute( name = "errors" )
+    private final int errorsInTests;
 
     @XStreamAsAttribute
-    @XStreamAlias("package")
-    @XmlAttribute(name="package")
-    private String packageName;
+    @XStreamAlias( "failures" )
+    @XmlAttribute( name = "failures" )
+    private final int failuresInTests;
 
     @XStreamAsAttribute
-    @XStreamAlias("skipped")
-    @XmlAttribute(name="skipped")
-    private int skippedTests;
+    @XStreamAlias( "skipped" )
+    @XmlAttribute( name = "skipped" )
+    private final int skippedTests;
 
     @XStreamAsAttribute
-    @XStreamAlias("tests")
-    @XmlAttribute(name="tests")
-    private long timeSpentInMillis;
+    @XStreamAlias( "tests" )
+    @XmlAttribute( name = "tests" )
+    private final long timeSpentInMillis;
 
     @XStreamAsAttribute
-    @XStreamAlias("timestamp")
-    @XmlAttribute(name="timestamp")
-    private long timestamp;
+    @XStreamAlias( "timestamp" )
+    @XmlAttribute( name = "timestamp" )
+    private final long timestamp;
 
-    @XStreamAlias("properties")
-    @XmlElement(name="properties")
+    @XStreamAlias( "properties" )
+    @XmlElement( name = "properties" )
     private final Map<String, String> properties;
 
     @XStreamImplicit
-    @XStreamAlias("testcase")
+    @XStreamAlias( "testcase" )
     @XmlList
-    @XmlElement(name="testcase")
+    @XmlElement( name = "testcase" )
     private final List<TestCase> testCases;
 
-    public TestSuite() {
-        this.properties = Maps.newHashMap();
-        this.testCases = Lists.newArrayList();
+    private TestSuite() {
+        this( Maps.<String, String>newHashMap(),
+              Lists.<TestCase>newArrayList(),
+              StringUtils.EMPTY,
+              StringUtils.EMPTY,
+              StringUtils.EMPTY,
+              StringUtils.EMPTY,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0L,
+              0L );
     }
 
-    public int getDisabledTests() {
-        return disabledTests;
+    public TestSuite( Map<String, String> properties,
+                      List<TestCase> testCases,
+                      String id,
+                      String name,
+                      String packageName,
+                      String hostname,
+                      int totalTests,
+                      int disabledTests,
+                      int errorsInTests,
+                      int failuresInTests,
+                      int skippedTests,
+                      long timeSpentInMillis,
+                      long timestamp ) {
+        this.properties = ImmutableMap.copyOf( properties );
+        this.testCases = ImmutableList.copyOf( testCases );
+        this.id = Preconditions.checkNotNull( id );
+        this.name = Preconditions.checkNotNull( name );
+        this.packageName = Preconditions.checkNotNull( packageName );
+        this.hostname = Preconditions.checkNotNull( hostname );
+        this.totalTests = Preconditions.checkNotNull( totalTests );
+        this.disabledTests = Preconditions.checkNotNull( disabledTests );
+        this.errorsInTests = Preconditions.checkNotNull( errorsInTests );
+        this.failuresInTests = Preconditions.checkNotNull( failuresInTests );
+        this.skippedTests = Preconditions.checkNotNull( skippedTests );
+        this.timeSpentInMillis = Preconditions.checkNotNull( timeSpentInMillis );
+        this.timestamp = Preconditions.checkNotNull( timestamp );
     }
 
-    public void setDisabledTests( int disabledTests ) {
-        this.disabledTests = disabledTests;
-    }
-
-    public int getErrorsInTests() {
-        return errorsInTests;
-    }
-
-    public void setErrorsInTests( int errorsInTests ) {
-        this.errorsInTests = errorsInTests;
-    }
-
-    public int getFailuresInTests() {
-        return failuresInTests;
-    }
-
-    public void setFailuresInTests( int failuresInTests ) {
-        this.failuresInTests = failuresInTests;
-    }
-
-    public int getTotalTests() {
-        return totalTests;
-    }
-
-    public void setTotalTests( int totalTests ) {
-        this.totalTests = totalTests;
-    }
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname( String hostname ) {
-        this.hostname = hostname;
-    }
+//    public void addTestCase( TestCase tc ) {
+//        this.errorsInTests += tc.getErrors().size();
+//        this.failuresInTests += tc.getFailures().size();
+//        this.timeSpentInMillis += tc.getTotalTimeSpent();
+//        this.testCases.add( tc );
+//    }
 
     public String getId() {
         return id;
-    }
-
-    public void setId( String id ) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName( String name ) {
-        this.name = name;
-    }
-
     public String getPackageName() {
         return packageName;
     }
 
-    public void setPackageName( String packageName ) {
-        this.packageName = packageName;
+    public String getHostname() {
+        return hostname;
+    }
+
+    public int getTotalTests() {
+        return totalTests;
+    }
+
+    public int getDisabledTests() {
+        return disabledTests;
+    }
+
+    public int getErrorsInTests() {
+        return errorsInTests;
+    }
+
+    public int getFailuresInTests() {
+        return failuresInTests;
     }
 
     public int getSkippedTests() {
         return skippedTests;
     }
 
-    public void setSkippedTests( int skippedTests ) {
-        this.skippedTests = skippedTests;
-    }
-
-    public long getTimeSpent() {
+    public long getTimeSpentInMillis() {
         return timeSpentInMillis;
-    }
-
-    public void setTimeSpent( long timeSpent ) {
-        this.timeSpentInMillis = timeSpent;
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp( long timestamp ) {
-        this.timestamp = timestamp;
-    }
-
     public Map<String, String> getProperties() {
         return properties;
     }
 
-    public void addProperty( String key, Object value ) {
-        this.properties.put( key, String.format( "%s", value ) );
-    }
-
     public List<TestCase> getTestCases() {
         return testCases;
-    }
-
-    public void addTestCase( TestCase tc ) {
-        this.errorsInTests += tc.getErrors().size();
-        this.failuresInTests += tc.getFailures().size();
-        this.timeSpentInMillis += tc.getTotalTimeSpent();
-        this.testCases.add( tc );
     }
 
     @Override

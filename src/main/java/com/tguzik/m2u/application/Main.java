@@ -14,25 +14,15 @@ import com.tguzik.m2u.xml.JunitXmlConverter;
  * tricks.
  */
 public class Main {
-
     public static final JmeterToJunitDataStructure JMETER_TO_JUNIT_DATA_STRUCTURE = new JmeterToJunitDataStructure();
     public static final JmeterXmlConverter JMETER_XML_CONVERTER = new JmeterXmlConverter();
     public static final JunitXmlConverter JUNIT_XML_CONVERTER = new JunitXmlConverter();
 
     public static void main( String[] args ) throws Exception {
-        ProgramOptions po = CommandLineParser.parse( args );
-        new Main( po ).process();
-    }
+        ProgramOptions programOptions = CommandLineParser.parse( args );
 
-    private final ProgramOptions programOptions;
-
-    public Main( ProgramOptions po ) {
-        this.programOptions = po;
-    }
-
-    public void process() throws IOException {
         try ( InputStreamReader input = new FileReader( programOptions.getInputFileName() );
-              OutputStreamWriter output = new FileWriter( programOptions.getOutputFileName() ); ) {
+              OutputStreamWriter output = new FileWriter( programOptions.getOutputFileName() ) ) {
 
             TestResults jmeterResults = JMETER_XML_CONVERTER.fromXML( input );
             TestSuites junitResults = JMETER_TO_JUNIT_DATA_STRUCTURE.apply( programOptions.getTestSuiteName(),
