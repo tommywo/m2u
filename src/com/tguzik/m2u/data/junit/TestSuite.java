@@ -8,6 +8,7 @@ import com.tguzik.objects.BaseObject;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 /**
  * @author Tomek
@@ -68,6 +69,7 @@ public class TestSuite extends BaseObject {
     @XStreamAlias("testcase")
     private final List<TestCase> testCases;
 
+    @XStreamOmitField
     private Map<List<String>,Integer> map = new HashMap<>();
 
     public TestSuite() {
