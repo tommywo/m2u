@@ -42,7 +42,6 @@ public class JtlToJunitConverterTest {
     }
 
     @Test
-    @Ignore
     public void testParsing() {
         TestResults tr = jmeter.fromXML( input );
         TestSuites ts = converter.apply( tr );

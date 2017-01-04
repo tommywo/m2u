@@ -1,7 +1,6 @@
 package com.tguzik.m2u.data.junit;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -68,6 +67,8 @@ public class TestSuite extends BaseObject {
     @XStreamImplicit
     @XStreamAlias("testcase")
     private final List<TestCase> testCases;
+
+    private Map<List<String>,Integer> map = new HashMap<>();
 
     public TestSuite() {
         this.properties = Maps.newHashMap();
@@ -175,6 +176,16 @@ public class TestSuite extends BaseObject {
     }
 
     public void addTestCase( TestCase tc ) {
+        List<String> key = Arrays.asList( tc.getClassname(),tc.getTestName());
+        Integer number;
+        if ( map.containsKey(key) ){
+            number = map.get(key);
+            number++;
+        } else {
+            number = 1;
+        }
+        map.put(key,number );
+        tc.setTestName( tc.getTestName()+"-"+number );
         this.errorsInTests += tc.getErrors().size();
         this.failuresInTests += tc.getFailures().size();
         this.timeSpentInSeconds += tc.getTotalTimeSpent();
