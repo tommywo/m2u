@@ -89,7 +89,7 @@ public class TestCase extends BaseObject {
         return totalTimeSpentInSeconds;
     }
 
-    public void setTotalTimeSpent( long totalTimeSpent ) {
+    public void setTotalTimeSpent( double totalTimeSpent ) {
         this.totalTimeSpentInSeconds = totalTimeSpent;
     }
 

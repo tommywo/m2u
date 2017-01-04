@@ -55,8 +55,8 @@ public class TestSuite extends BaseObject {
     private int skippedTests;
 
     @XStreamAsAttribute
-    @XStreamAlias("tests")
-    private long timeSpentInMillis;
+    @XStreamAlias("time")
+    private double timeSpentInSeconds;
 
     @XStreamAsAttribute
     @XStreamAlias("timestamp")
@@ -146,12 +146,12 @@ public class TestSuite extends BaseObject {
         this.skippedTests = skippedTests;
     }
 
-    public long getTimeSpent() {
-        return timeSpentInMillis;
+    public double getTimeSpent() {
+        return timeSpentInSeconds;
     }
 
     public void setTimeSpent( long timeSpent ) {
-        this.timeSpentInMillis = timeSpent;
+        this.timeSpentInSeconds = timeSpent;
     }
 
     public long getTimestamp() {
@@ -177,8 +177,9 @@ public class TestSuite extends BaseObject {
     public void addTestCase( TestCase tc ) {
         this.errorsInTests += tc.getErrors().size();
         this.failuresInTests += tc.getFailures().size();
-        this.timeSpentInMillis += tc.getTotalTimeSpent();
+        this.timeSpentInSeconds += tc.getTotalTimeSpent();
         this.testCases.add( tc );
+        this.totalTests += 1;
     }
 
     @Override

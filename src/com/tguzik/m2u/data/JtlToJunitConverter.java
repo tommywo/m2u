@@ -50,7 +50,7 @@ public class JtlToJunitConverter implements Function<TestResults, TestSuites> {
         tc.setAssertions( safe( sample.getAssertionResults() ).size() );
         tc.setClassname( sample.getThreadName() );
         tc.setTestName( sample.getThreadName() );
-        tc.setTotalTimeSpent( sample.getElapsedTime() );
+        tc.setTotalTimeSpent( sample.getElapsedTime() / 1000.0); //converting from milis to seconds
         tc.addSystemOut( sample.toString() );
 
         for ( AssertionResult ar : Iterables.filter( safe( sample.getAssertionResults() ), ERRORED_ASSERTIONS ) ) {

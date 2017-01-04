@@ -37,7 +37,7 @@ public class TestSuites extends BaseObject {
 
     @XStreamAsAttribute
     @XStreamAlias("time")
-    private long totalTimeSpent; // miliseconds
+    private double totalTimeSpent; // seconds
 
     @XStreamImplicit
     @XStreamAlias("testsuite")
@@ -56,7 +56,7 @@ public class TestSuites extends BaseObject {
         this.errorsInTests += ts.getErrorsInTests();
         this.failuresInTests += ts.getFailuresInTests();
         this.totalTests += ts.getTotalTests();
-
+        this.totalTimeSpent += ts.getTimeSpent();
         this.testSuites.add( ts );
     }
 
@@ -100,7 +100,7 @@ public class TestSuites extends BaseObject {
         this.totalTests = totalTests;
     }
 
-    public long getTotalTimeSpent() {
+    public double getTotalTimeSpent() {
         return totalTimeSpent;
     }
 
