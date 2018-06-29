@@ -7,6 +7,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.tguzik.m2u.application.ProgramOptions;
 import com.tguzik.m2u.data.jtl.*;
+import com.tguzik.m2u.data.junit.Error;
 import com.tguzik.m2u.data.junit.Failure;
 import com.tguzik.m2u.data.junit.TestCase;
 import com.tguzik.m2u.data.junit.TestSuite;
@@ -52,6 +53,14 @@ public class JtlToJunitConverter implements Function<TestResults, TestSuites> {
         tc.setTestName( sample.getThreadName() );
         tc.setTotalTimeSpent( sample.getElapsedTime() / 1000.0); //converting from milis to seconds
         tc.addSystemOut( sample.toString() );
+
+        if (!sample.isSuccess()) {
+            Error sampleError = new Error();
+            sampleError.setType("SampleError");
+            sampleError.setMessage( sample.getHttpResponseMessage() );
+
+            tc.addFailure( sampleError );
+        }
 
         for ( AssertionResult ar : Iterables.filter( safe( sample.getAssertionResults() ), ERRORED_ASSERTIONS ) ) {
             tc.addError( convertErroredOutAssertion( ar ) );
